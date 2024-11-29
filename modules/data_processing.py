@@ -2,6 +2,7 @@ import pandas
 from modules.file_utils import read_excel_sheet
 import os
 import pandas as pd
+import re
 
 def raw_dataraw_files(files, sheet_name, directory_name):
     """
@@ -26,7 +27,6 @@ def header_consistency(index_header):
             unmatch.append(file_name)
     return unmatch
 
-    
 
 def header_finder(raw_data):
 
@@ -55,6 +55,21 @@ def header_finder(raw_data):
 
     return index_data, unmatched
 
+def extract_date_info(file_name):
+    match = re.search(r'(\w+)-(\d{4})', file_name)  # Match month and year
+    if match:
+        month_name = match.group(1).lower()
+        year = match.group(2)
+        # Map month names to month numbers
+        month_map = {
+            "january": 1, "february": 2, "march": 3, "april": 4,
+            "may": 5, "june": 6, "july": 7, "august": 8,
+            "september": 9, "october": 10, "november": 11, "december": 12
+        }
+        month = month_map.get(month_name, None)
+        return month, year
+    return None, None
+
 def data_concat(index_data, unmatched, raw_data):
     """
     Concatenate data from files with consistent headers.
@@ -67,8 +82,15 @@ def data_concat(index_data, unmatched, raw_data):
             # Skip rows before the header row and reset column names
             data_with_header = raw_data[file_name].iloc[index_num:].reset_index(drop=True)
             data_with_header.columns = data_with_header.iloc[0]  # Set first row as column names
+            month, year = extract_date_info(file_name)
+
+            if month and year:
+                data_with_header["Month"] = month
+                data_with_header["Year"] = year
+
             data_with_header = data_with_header[1:]  # Drop the header row
             final_data = pd.concat([final_data, data_with_header], ignore_index=True)
+            month, year = extract_date_info(file_name)
     print("Concatenating Done")
 
     return final_data

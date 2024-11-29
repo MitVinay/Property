@@ -1,6 +1,7 @@
 import yaml
 from modules.file_utils import list_excel_files
 from modules.data_processing import raw_dataraw_files, header_finder, data_concat
+from modules.data_storing import save_sample_data
 
 
 def main():
@@ -17,6 +18,13 @@ def main():
     raw_data = raw_dataraw_files(files = files, sheet_name=sheet_name, directory_name=data_directory)
     index_data, unmatched  = header_finder(raw_data)
     final_data = data_concat(index_data, unmatched, raw_data)
+
+    # Example usage after concatenating data
+    # final_data is the DataFrame created in the data_concat function
+    output_path = "./outputs/sample_data.csv"
+    sample_size = 1000
+    # Assuming `final_data` is already created
+    sample_data = save_sample_data(final_data, output_path, sample_size)
 
     
 
