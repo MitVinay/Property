@@ -22,11 +22,10 @@ def main():
     final_data = clean_rental_data(final_data)
     # Example usage after concatenating data
     # final_data is the DataFrame created in the data_concat function
-    output_path = "./outputs/sample_data.csv"
-    sample_size = 1000
+    output_path = "./outputs/cleaned_data.csv"
     # Assuming `final_data` is already created
     
-    sample_data = save_sample_data(final_data, output_path, sample_size)
+    save_sample_data(final_data, output_path)
 
     
 
