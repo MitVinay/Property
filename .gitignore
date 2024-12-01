@@ -1,4 +1,4 @@
-outputs/*
+outputs/cleaned_data.csv
 insert_data.py
 property_env
 rent_data/.DS_Store
